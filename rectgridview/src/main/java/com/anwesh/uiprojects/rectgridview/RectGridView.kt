@@ -112,4 +112,47 @@ class RectGridView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    class RGNode(var i : Int, val state : State = State()) {
+
+        private var prev : RGNode? = null
+        private var next : RGNode? = null
+
+        fun addNeighbor() {
+            if (i < nodes - 1) {
+                next = RGNode(i + 1)
+                next?.prev = this
+            }
+        }
+
+        init {
+            addNeighbor()
+        }
+
+        fun update(cb : (Int, Float) -> Unit) {
+            state.update {
+                cb(i, it)
+            }
+        }
+
+        fun startUpdating(cb : () -> Unit) {
+            state.startUpdating(cb)
+        }
+
+        fun getNext(dir : Int, cb : () -> Unit) : RGNode {
+            var curr : RGNode? = prev
+            if (dir == 1) {
+                curr = next
+            }
+            if (curr != null) {
+                return curr
+            }
+            cb()
+            return this
+        }
+
+        fun draw(canvas : Canvas, paint : Paint) {
+            canvas.drawRGNode(i, state.scale, paint)
+        }
+    }
 }
