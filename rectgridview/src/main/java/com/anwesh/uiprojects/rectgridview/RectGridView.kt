@@ -8,10 +8,45 @@ import android.view.View
 import android.view.MotionEvent
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 
 val nodes : Int = 5
+
+fun Canvas.drawRectGrid(x : Float, y : Float, size : Float, sc : Float, paint : Paint) {
+    val gap : Float = size / nodes
+    var xStart : Float = x - size/2
+    val sizeSc : Float = (gap/3) * (1 - sc)
+    save()
+    for (i in 0..nodes - 1) {
+        save()
+        translate(xStart, y)
+        drawRect(RectF(-sizeSc, -sizeSc, sizeSc, sizeSc), paint)
+        xStart += gap
+        restore()
+    }
+    restore()
+}
+
+fun Canvas.drawRGNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    val gap : Float = w / nodes
+    val sc1 : Float = Math.min(0.5f, scale) * 2
+    val sc2 : Float = Math.min(0.5f, Math.max(0f, scale - 0.5f)) * 2
+    val size : Float = 3 * gap / 4
+    val hSize : Float = size / nodes
+    val y : Float = -size/2 + i * hSize
+    save()
+    translate(gap * i + gap / 2 + gap * sc1, h / 2)
+    paint.color = Color.parseColor("#3F51B5")
+    drawRectGrid(0f, y, size, sc2, paint)
+    for (j in ((i + 1) .. (nodes - 1))) {
+        drawRectGrid(0f, y + j * hSize, size, 0f, paint)
+    }
+    restore()
+}
 
 class RectGridView(ctx : Context) : View(ctx) {
 
