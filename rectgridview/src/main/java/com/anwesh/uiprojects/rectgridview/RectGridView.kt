@@ -177,4 +177,26 @@ class RectGridView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : RectGridView) {
+
+        private val animator : Animator = Animator(view)
+        private val linkedRG : LinkedRG = LinkedRG(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(Color.parseColor("#BDBDBD"))
+            linkedRG.draw(canvas, paint)
+            animator.animate {
+                linkedRG.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            linkedRG.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
