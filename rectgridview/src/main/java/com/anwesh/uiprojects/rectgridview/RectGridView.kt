@@ -38,13 +38,13 @@ fun Canvas.drawRGNode(i : Int, scale : Float, paint : Paint) {
     val sc2 : Float = Math.min(0.5f, Math.max(0f, scale - 0.5f)) * 2
     val size : Float = 3 * gap / 4
     val hSize : Float = size / nodes
-    val y : Float = -size/2 + i * hSize
+    val y : Float = -size/2 + i * hSize + hSize / 2
     save()
     translate(gap * i + gap / 2 + gap * sc1, h / 2)
     paint.color = Color.parseColor("#3F51B5")
     drawRectGrid(0f, y, size, sc2, paint)
     for (j in ((i + 1) .. (nodes - 1))) {
-        drawRectGrid(0f, y + j * hSize, size, 0f, paint)
+        drawRectGrid(0f, -size / 2 + j * hSize + hSize / 2, size, 0f, paint)
     }
     restore()
 }
