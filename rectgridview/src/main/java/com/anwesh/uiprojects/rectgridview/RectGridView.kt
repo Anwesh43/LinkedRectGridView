@@ -4,6 +4,7 @@ package com.anwesh.uiprojects.rectgridview
  * Created by anweshmishra on 19/08/18.
  */
 
+import android.app.Activity
 import android.view.View
 import android.view.MotionEvent
 import android.content.Context
@@ -199,6 +200,14 @@ class RectGridView(ctx : Context) : View(ctx) {
             linkedRG.startUpdating {
                 animator.start()
             }
+        }
+    }
+
+    companion object {
+        fun create(activity : Activity) : RectGridView {
+            val view : RectGridView = RectGridView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
