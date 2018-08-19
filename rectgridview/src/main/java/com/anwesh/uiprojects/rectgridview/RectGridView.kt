@@ -16,7 +16,7 @@ import android.graphics.RectF
 val nodes : Int = 5
 
 fun Canvas.drawRectGrid(x : Float, y : Float, size : Float, sc : Float, paint : Paint) {
-    val gap : Float = size / nodes
+    val gap : Float = size / (nodes + 1)
     var xStart : Float = x - size/2
     val sizeSc : Float = (gap/3) * (1 - sc)
     save()
@@ -55,6 +55,8 @@ class RectGridView(ctx : Context) : View(ctx) {
 
     private val renderer : Renderer = Renderer(this)
 
+    var onAnimationListener : OnAnimationListener? = null
+
     override fun onDraw(canvas : Canvas) {
         renderer.render(canvas, paint)
     }
@@ -66,6 +68,10 @@ class RectGridView(ctx : Context) : View(ctx) {
             }
         }
         return true
+    }
+
+    fun addOnAnimationListener(onComplete : (Int) -> Unit, onReset : (Int) -> Unit) {
+        onAnimationListener = OnAnimationListener(onComplete, onReset)
     }
 
     data class State(var scale : Float = 0f, var prevScale : Float = 0f, var dir : Float = 0f) {
@@ -192,6 +198,10 @@ class RectGridView(ctx : Context) : View(ctx) {
             animator.animate {
                 linkedRG.update {i, scl ->
                     animator.stop()
+                    when (scl) {
+                        0f -> view.onAnimationListener?.onReset?.invoke(i)
+                        1f -> view.onAnimationListener?.onComplete?.invoke(i)
+                    }
                 }
             }
         }
@@ -210,4 +220,6 @@ class RectGridView(ctx : Context) : View(ctx) {
             return view
         }
     }
+
+    data class OnAnimationListener(var onComplete : (Int) -> Unit, var onReset : (Int) -> Unit)
 }
