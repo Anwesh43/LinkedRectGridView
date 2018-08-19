@@ -16,7 +16,7 @@ import android.graphics.RectF
 val nodes : Int = 5
 
 fun Canvas.drawRectGrid(x : Float, y : Float, size : Float, sc : Float, paint : Paint) {
-    val gap : Float = size / (nodes + 1)
+    val gap : Float = size / (nodes)
     var xStart : Float = x - size/2
     val sizeSc : Float = (gap/3) * (1 - sc)
     save()
@@ -33,7 +33,7 @@ fun Canvas.drawRectGrid(x : Float, y : Float, size : Float, sc : Float, paint : 
 fun Canvas.drawRGNode(i : Int, scale : Float, paint : Paint) {
     val w : Float = width.toFloat()
     val h : Float = height.toFloat()
-    val gap : Float = w / nodes
+    val gap : Float = w / (nodes + 1)
     val sc1 : Float = Math.min(0.5f, scale) * 2
     val sc2 : Float = Math.min(0.5f, Math.max(0f, scale - 0.5f)) * 2
     val size : Float = 3 * gap / 4
@@ -77,7 +77,7 @@ class RectGridView(ctx : Context) : View(ctx) {
     data class State(var scale : Float = 0f, var prevScale : Float = 0f, var dir : Float = 0f) {
 
         fun update(cb : (Float) -> Unit) {
-            scale += 0.1f * this.dir
+            scale += 0.05f * this.dir
             if (Math.abs(this.scale - this.prevScale) > 1) {
                 this.scale = this.prevScale + this.dir
                 this.dir = 0f
